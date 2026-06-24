@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\DopeWebsite\\DopeWebsite.csproj": {}
+    "D:\\NewDopeWebsite\\DopeWebsite.csproj": {}
   },
   "projects": {
-    "D:\\DopeWebsite\\DopeWebsite.csproj": {
+    "D:\\NewDopeWebsite\\DopeWebsite.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DopeWebsite\\DopeWebsite.csproj",
+        "projectUniqueName": "D:\\NewDopeWebsite\\DopeWebsite.csproj",
         "projectName": "DopeWebsite",
-        "projectPath": "D:\\DopeWebsite\\DopeWebsite.csproj",
+        "projectPath": "D:\\NewDopeWebsite\\DopeWebsite.csproj",
         "packagesPath": "C:\\Users\\MY PC\\.nuget\\packages\\",
-        "outputPath": "D:\\DopeWebsite\\obj\\",
+        "outputPath": "D:\\NewDopeWebsite\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -67,6 +67,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[10.0.9, )"
+            },
+            "Microsoft.AspNetCore.StaticFiles": {
+              "target": "Package",
+              "version": "[2.3.11, )"
             },
             "Microsoft.NET.ILLink.Tasks": {
               "suppressParent": "All",

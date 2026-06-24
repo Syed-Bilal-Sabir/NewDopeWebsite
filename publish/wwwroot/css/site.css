@@ -409,3 +409,5 @@ section, header, footer {
         height: 100%;
         object-fit: cover; /* crops to fill — change to "contain" to letterbox */
     }
+
+ 

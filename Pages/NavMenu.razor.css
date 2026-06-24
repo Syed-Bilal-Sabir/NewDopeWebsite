@@ -15,27 +15,34 @@
 .navbar__inner {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content:space-between ;
     padding-top: 1.25rem;
     padding-bottom: 1.25rem;
+    
+    
 }
 
 .navbar__brand {
     display: flex;
-    align-items: center;
-    gap: 0.7rem;
+    align-items:  safe center;
+    gap: 0.2rem;
+    
 }
 
 .navbar__logo-mark {
-    width: 30px;
-    height: 30px;
-    border-radius: 7px;
-    background: var(--grad-brand);
-    box-shadow: var(--shadow-glow-blue);
+    width: 100px;
+    height: 100px;
+    border-radius: 2px;
+    
+/*    background: var(--grad-brand);*/
+/*    box-shadow: var(--shadow-glow-blue);*/
 }
 
+
+
 .navbar__logo-text {
-    font-family: var(--font-display);
+    
+        font-family: var(--font-display);
     font-weight: 800;
     font-size: 1.15rem;
     letter-spacing: 0.08em;
@@ -122,4 +129,10 @@
     .navbar__mobile {
         display: block;
     }
+}
+.Logo_name {
+    width: 200px;
+    height: 50px;
+    border-radius: 0px;
+    margin-top:5%;
 }
