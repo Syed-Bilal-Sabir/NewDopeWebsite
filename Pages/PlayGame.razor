@@ -1,43 +1,23 @@
-@* ==========================================================================
-   PlayGame.razor — Unity WebGL game page
-   Route: /play-game
-
-   Expects your Unity 2022+ WebGL build to be placed at:
-     wwwroot/
-       game/
-         Build/
-           game.loader.js        ← rename your actual .loader.js to this
-           game.data.gz          ← (or .data / .data.br depending on compression)
-           game.framework.js.gz
-           game.wasm.gz
-         index.html              ← Unity's generated index (not used directly,
-                                    we load via JS below instead)
-
-   If your build files have different names, update the loaderUrl,
-   dataUrl, frameworkUrl and codeUrl variables in the @code block below.
-   ========================================================================== *@
-
-@page "/play-game"
+@page "/play-game/{GameId}"
 @inject IJSRuntime JS
+@inject NavigationManager Nav
 @implements IAsyncDisposable
 
 <div class="game-page">
-    <VideoBackground />
-
     <div class="game-page__inner">
 
-        {{!-- Header row --}}
+        @* Header row *@
         <div class="game-page__header">
             <a href="/" class="game-page__back">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 12H5M12 5l-7 7 7 7"/>
+                    <path d="M19 12H5M12 5l-7 7 7 7" />
                 </svg>
                 Back to site
             </a>
 
             <div class="game-page__title-block">
-                <span class="game-page__label">Doped Games</span>
-                <h1 class="game-page__title">@GameTitle</h1>
+                <span class="game-page__label">GLITCH STUDIO</span>
+                <h1 class="game-page__title">@CurrentGame?.Title</h1>
             </div>
 
             <button class="btn btn-outline game-page__fullscreen-btn"
@@ -45,13 +25,13 @@
                     title="Toggle fullscreen">
                 <svg class="game-page__fs-icon" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="1.8">
-                    <path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M16 21h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
+                    <path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M16 21h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" />
                 </svg>
                 Fullscreen
             </button>
         </div>
 
-        {{!-- Canvas wrapper --}}
+        @* Canvas wrapper *@
         <div class="game-page__canvas-wrap" id="unityCanvasWrap">
             @if (_loading)
             {
@@ -75,14 +55,23 @@
                 </div>
             }
 
+            @if (CurrentGame is null && _error is null)
+            {
+                <div class="game-page__error">
+                    <p>⚠ Game not found</p>
+                    <p class="game-page__error-detail">No game exists with id "@GameId"</p>
+                    <a href="/" class="btn btn-primary">Go Home</a>
+                </div>
+            }
+
             <canvas id="unityCanvas" class="game-page__canvas"></canvas>
         </div>
 
-        {{!-- Footer row --}}
+        @* Footer row *@
         <div class="game-page__footer">
-            <p class="game-page__description">@GameDescription</p>
+            <p class="game-page__description">@CurrentGame?.Description</p>
             <div class="game-page__badges">
-                @foreach (var tag in GameTags)
+                @foreach (var tag in CurrentGame?.Tags ?? Array.Empty<string>())
                 {
                     <span class="game-page__badge">@tag</span>
                 }
@@ -93,40 +82,77 @@
 </div>
 
 @code {
-    // ── Customise these to match your game ──────────────────────────────────
-    private const string GameTitle       = "PAWS & REWARDS";
-    private const string GameDescription = "A slot machine game where players can win big prizes.";
-    private static readonly string[] GameTags = { "Action", "Platformer", "WebGL" };
+    [Parameter] public string GameId { get; set; } = "";
 
-    // ── Unity build file paths (relative to wwwroot) ─────────────────────
-    // Rename your actual Unity-generated files to match these, or change
-    // these strings to match whatever Unity named them.
-    private const string LoaderUrl    = "games/Build/game.loader.js";
-    private const string DataUrl      = "games/Build/game.data";
-    private const string FrameworkUrl = "games/Build/game.framework.js";
-    private const string CodeUrl      = "games/Build/game.wasm";
-    // ── End customisation ────────────────────────────────────────────────────
+    // ── Add all your games here ──────────────────────────────────────────
+    private static readonly Dictionary<string, GameInfo> Games = new()
+    {
+        ["tyche"] = new GameInfo(
+        Title: "TYCHE",
+        Description: "Experience the action-packed world of Tyche.",
+        Tags: new[] { "Action", "Strategy", "WebGL" },
+        BuildPath: "games/Tyche/Build/Tyche"
+    ),
+        ["beach"] = new GameInfo(
+        Title: "BEACH",
+        Description: "Solve puzzles in a beautiful beach setting.",
+        Tags: new[] { "Puzzle", "Strategy", "WebGL" },
+        BuildPath: "games/Beach/Build/Beach"
+    ),
+        ["norse"] = new GameInfo(
+        Title: "NORSE",
+        Description: "Battle through Norse mythology in this epic shooter.",
+        Tags: new[] { "Shooter", "Strategy", "WebGL" },
+        BuildPath: "games/Norse/Build/Norse"
+    ),
+        ["soccer"] = new GameInfo(
+        Title: "SOCCER",
+        Description: "Play casual soccer with strategic gameplay.",
+        Tags: new[] { "Casual", "Strategy", "WebGL" },
+        BuildPath: "games/Soccer/Build/Soccer"
+    ),
+        ["pet"] = new GameInfo(
+        Title: "PET",
+        Description: "Sort and match in this fun pet-themed game.",
+        Tags: new[] { "Sorting", "Strategy", "WebGL" },
+        BuildPath: "games/Pet/Build/Pet"
+    ),
+        ["wild"] = new GameInfo(
+        Title: "WILD WEST",
+        Description: "Experience the thrill of the Wild West in this exciting game.",
+        Tags: new[] { "Adventure", "Strategy", "WebGL" },
+        BuildPath: "games/Wild/Build/Wild"
+    ),
+    };
+    // ── End game config ──────────────────────────────────────────────────
 
-    private bool   _loading  = false;
+    private GameInfo? CurrentGame => Games.TryGetValue(GameId?.ToLower() ?? "", out var g) ? g : null;
+
+    private bool _loading = false;
     private double _progress = 0;
-    private string? _error   = null;
-
+    private string? _error = null;
     private IJSObjectReference? _module;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
+        if (firstRender && CurrentGame is not null)
             await LoadGame();
-        }
     }
 
     private async Task LoadGame()
     {
-        _error    = null;
-        _loading  = true;
+        if (CurrentGame is null) return;
+
+        _error = null;
+        _loading = true;
         _progress = 0;
         StateHasChanged();
+
+        var cacheBust = $"?v={DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
+        var loaderUrl = $"{CurrentGame.BuildPath}.loader.js{cacheBust}";
+        var dataUrl = $"{CurrentGame.BuildPath}.data{cacheBust}";
+        var frameworkUrl = $"{CurrentGame.BuildPath}.framework.js{cacheBust}";
+        var codeUrl = $"{CurrentGame.BuildPath}.wasm{cacheBust}";
 
         try
         {
@@ -135,11 +161,11 @@
 
             var selfRef = DotNetObjectReference.Create(this);
             await _module.InvokeVoidAsync("loadUnity",
-                "unityCanvas", LoaderUrl, DataUrl, FrameworkUrl, CodeUrl, selfRef);
+                "unityCanvas", loaderUrl, dataUrl, frameworkUrl, codeUrl, selfRef);
         }
         catch (Exception ex)
         {
-            _error   = ex.Message;
+            _error = ex.Message;
             _loading = false;
             StateHasChanged();
         }
@@ -162,7 +188,7 @@
     [JSInvokable]
     public void OnError(string message)
     {
-        _error   = message;
+        _error = message;
         _loading = false;
         StateHasChanged();
     }
@@ -185,4 +211,6 @@
             catch (Microsoft.JSInterop.JSDisconnectedException) { }
         }
     }
+
+    private record GameInfo(string Title, string Description, string[] Tags, string BuildPath);
 }
