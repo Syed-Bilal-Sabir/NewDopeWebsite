@@ -1,0 +1,52 @@
+@* ==========================================================================
+   Portfolio.razor — "Games that we're proud of" section
+   ========================================================================== *@
+
+<section class="portfolio" id="portfolio">
+    <div class="container">
+        <div class="section-heading">
+            <span class="section-eyebrow">02</span>
+            <h2 class="section-title">PORTFOLIO</h2>
+        </div>
+        <p class="section-subtitle">Games that we're proud of</p>
+
+        <div class="portfolio__grid">
+            @foreach (var game in Games)
+            {
+                <article class="portfolio-card">
+                    <a href="@game.playstoreUrl" target="_blank" rel="noopener noreferrer">
+                        <div class="portfolio-card__art gradient-placeholder"
+                             style="background-image: @game.GradientCss;"
+                             aria-hidden="true">
+                            <img src="@game.imageUrl" alt="@game.Title" />
+                        </div>
+                        <div class="portfolio-card__info">
+                            <h3 class="portfolio-card__title">@game.Title</h3>
+                            <p class="portfolio-card__genre">@game.Genre</p>
+                        </div>
+                    </a>
+                </article>
+            }
+        </div>
+    </div>
+
+    <span class="floating-label portfolio__label--nextlevel">NEXT<br />— —<br />LEVEL</span>
+</section>
+
+@code {
+    private record Game(string Title, string Genre, string GradientCss, string imageUrl, string playstoreUrl );
+
+    private readonly List<Game> Games = new()
+    {
+        new("BATLLE ORDER", "Action / Strategy",
+            "linear-gradient(135deg, #1fd0ff, #1a3a7a)", "Images/portfolio5.png","https://play.google.com/store/apps/details?id=com.Glitch.BattleOrder&hl=en"),
+        new("PUZZLE WARRIOR", "Puzzle / Strategy",
+            "linear-gradient(135deg, #ff7a3d, #3a1a4a)", "Images/portfolio3.png","https://play.google.com/store/apps/details?id=com.glitchtech.puzzlewarrior.rpg&hl=en"),
+        new("PIRATES ATTACK", "Shooter / Strategy",
+            "linear-gradient(135deg, #2e6bff, #0a1030)", "Images/portfolio2.png","https://play.google.com/store/apps/details?id=com.glitchtech.piratesattack.defense&hl=en"),
+        new("WATER VALVES", "Hybrid casual / strategy",
+            "linear-gradient(135deg, #ff5a2e, #1a0a0a)", "Images/portfolio4.png","https://play.google.com/store/apps/details?id=com.glitchtech.waterwalls.games&hl=en"),
+        new("BALLOON FILL", "Sorting / Strategy",
+            "linear-gradient(135deg, #b06aff, #1a1a3a)", "Images/portfolio1.png","https://play.google.com/store/apps/details?id=com.glitchtech.balloon.game&hl=en"),
+    };
+}
