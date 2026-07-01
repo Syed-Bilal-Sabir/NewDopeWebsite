@@ -148,11 +148,10 @@
         _progress = 0;
         StateHasChanged();
 
-        var cacheBust = $"?v={DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
-        var loaderUrl = $"{CurrentGame.BuildPath}.loader.js{cacheBust}";
-        var dataUrl = $"{CurrentGame.BuildPath}.data{cacheBust}";
-        var frameworkUrl = $"{CurrentGame.BuildPath}.framework.js{cacheBust}";
-        var codeUrl = $"{CurrentGame.BuildPath}.wasm{cacheBust}";
+        var loaderUrl = $"{CurrentGame.BuildPath}.loader.js";
+        var dataUrl = $"{CurrentGame.BuildPath}.data";
+        var frameworkUrl = $"{CurrentGame.BuildPath}.framework.js";
+        var codeUrl = $"{CurrentGame.BuildPath}.wasm";
 
         try
         {
